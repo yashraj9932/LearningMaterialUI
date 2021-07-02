@@ -1,13 +1,16 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
-import AccountCircle from "@material-ui/icons/AccountCircle";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+
+import { useHistory } from "react-router-dom";
+import { Button } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,66 +24,124 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MenuAppBar() {
+const Header = () => {
+  const history = useHistory();
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleMenuClick = (pageUrl) => {
     setAnchorEl(null);
+    history.push(pageUrl);
   };
 
   return (
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-          >
-            <MenuIcon />
-          </IconButton>
           <Typography variant="h6" className={classes.title}>
             Photos
           </Typography>
           {
             <div>
-              <IconButton
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={open}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
-              </Menu>
+              {isMobile ? (
+                <>
+                  <IconButton
+                    edge="start"
+                    className={classes.menuButton}
+                    onClick={handleMenu}
+                    color="inherit"
+                  >
+                    <MenuIcon />
+                  </IconButton>
+
+                  <Menu
+                    id="menu-appbar"
+                    anchorEl={anchorEl}
+                    anchorOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                    open={open}
+                    onClose={() => {
+                      setAnchorEl(null);
+                    }}
+                  >
+                    <MenuItem
+                      onClick={() => {
+                        handleMenuClick("/");
+                      }}
+                    >
+                      Home
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => {
+                        handleMenuClick("/contact");
+                      }}
+                    >
+                      Contact
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => {
+                        handleMenuClick("/about");
+                      }}
+                    >
+                      About
+                    </MenuItem>
+                  </Menu>
+                </>
+              ) : (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyItems: "flex-end",
+                    justifyContent: "space-around",
+                  }}
+                >
+                  <Button
+                    // style={{ paddingRight: "10%" }}
+                    onClick={() => {
+                      handleMenuClick("/");
+                    }}
+                  >
+                    Home
+                  </Button>
+                  <Button
+                    // style={{ paddingRight: "10%" }}
+                    onClick={() => {
+                      handleMenuClick("/contact");
+                    }}
+                  >
+                    Contact
+                  </Button>
+                  <Button
+                    // style={{ paddingRight: "10%" }}
+                    onClick={() => {
+                      handleMenuClick("/about");
+                    }}
+                  >
+                    About
+                  </Button>
+                </div>
+              )}
             </div>
           }
         </Toolbar>
       </AppBar>
     </div>
   );
-}
+};
+
+export default Header;

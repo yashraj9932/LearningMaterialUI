@@ -1,4 +1,4 @@
-import Home from "./Home";
+import Homee from "./Homee";
 import Contact from "./Contact";
 import About from "./About";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
@@ -14,12 +14,13 @@ const useStyles = makeStyles({
 const App = () => {
   const classes = useStyles();
   return (
-    <div className={classes.container}>
-      <Header />
+    <Router>
+      <div className={classes.container}>
+        <Header />
 
-      <Router>
         <Switch>
-          <Route exact path="/" render={(props) => <Home {...props} />} />
+          <Route exact path="/" component={Homee} />
+          {/* <Route exact path="/" render={(props) => <Home {...props} />} /> */}
           <Route exact path="/about" render={(props) => <About {...props} />} />
           <Route
             exact
@@ -27,8 +28,8 @@ const App = () => {
             render={(props) => <Contact {...props} />}
           />
         </Switch>
-      </Router>
-    </div>
+      </div>
+    </Router>
   );
 };
 
